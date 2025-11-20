@@ -1,0 +1,53 @@
+---
+invoice:
+  invoice_id: INV-2025-002
+  date: 2025-11-15
+  due_date: 2025-12-15
+  currency: USD
+  payment_terms: "Net 30"
+  status: draft
+
+  sender:
+    name: Jane Doe
+    organization: Acme Consulting LLC
+    address:
+      street: 789 Business Ave
+      optional: Suite 500
+      city: San Francisco
+      state: CA
+      zip: 94102
+      country: US
+
+  bill_to:
+    organization: TechCorp Industries
+    address:
+      street: 456 Innovation Drive
+      city: Palo Alto
+      state: CA
+      zip: 94301
+      country: US
+
+  items:
+    - description: Website Development
+      units: hours
+      quantity: 40
+      unit_cost: 125.00
+      date:
+        start: 2025-11-01
+        end: 2025-11-07
+
+    - description: UI/UX Design Consultation
+      units: hours
+      quantity: 15
+      unit_cost: 150.00
+      date: 2025-11-10
+
+    - description: Project Management
+      units: hours
+      quantity: 8
+      unit_cost: 100.00
+      date:
+        start: 2025-11-01
+        end: 2025-11-15
+
+  notes: "Thank you for your business! Payment can be made via check or bank transfer."

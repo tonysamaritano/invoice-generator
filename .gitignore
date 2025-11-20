@@ -2,9 +2,6 @@ venv/
 data/
 output/
 
-*.png
-*.jpg
-*.jpeg
 *.pdf
 *.pyc
 

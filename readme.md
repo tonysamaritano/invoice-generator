@@ -2,6 +2,8 @@
 
 Generate professional HTML and PDF invoices from YAML data.
 
+![Example Invoice](example/example.png)
+
 ## Installation
 
 ```bash
