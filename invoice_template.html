@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice {{ invoice.invoice_id }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #333;
+            line-height: 1.4;
+            padding: 15px;
+            background: #fff;
+            font-size: 12px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #2c3e50;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            font-weight: 300;
+        }
+
+        .invoice-details {
+            text-align: right;
+        }
+
+        .invoice-details div {
+            margin-bottom: 5px;
+        }
+
+        .invoice-details strong {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+        }
+
+        .parties {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            align-items: stretch;
+        }
+
+        .party {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .party h3 {
+            font-size: 14px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .party-content {
+            background: #f8f9fa;
+            padding: 10px;
+            border-left: 3px solid #3498db;
+            flex: 1;
+        }
+
+        .party-content p {
+            margin-bottom: 3px;
+        }
+
+        .party-content .org-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .items-table thead {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .items-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .items-table th.right {
+            text-align: right;
+        }
+
+        .items-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .items-table td.right {
+            text-align: right;
+        }
+
+        .items-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .totals {
+            margin-left: auto;
+            width: 300px;
+            margin-bottom: 15px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .total-row.final {
+            border-top: 2px solid #2c3e50;
+            border-bottom: 3px double #2c3e50;
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-top: 10px;
+        }
+
+        .notes {
+            background: #fff9e6;
+            border-left: 3px solid #f39c12;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        .notes h4 {
+            color: #e67e22;
+            margin-bottom: 5px;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .footer {
+            text-align: center;
+            color: #95a5a6;
+            font-size: 12px;
+            padding-top: 15px;
+            border-top: 1px solid #ecf0f1;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-final {
+            background: #27ae60;
+            color: white;
+        }
+
+        .status-draft {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        .attachments-section {
+            margin-top: 30px;
+        }
+
+        .attachments-section h2 {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2c3e50;
+        }
+
+        .attachments-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .attachment-item {
+            border: 1px solid #ecf0f1;
+            padding: 10px;
+            background: #f8f9fa;
+        }
+
+        .attachment-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .attachment-caption {
+            font-size: 11px;
+            color: #7f8c8d;
+            text-align: center;
+        }
+
+        .item-date {
+            font-size: 10px;
+            color: #95a5a6;
+            font-weight: normal;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>INVOICE</h1>
+                <span class="status-badge status-{{ invoice.status }}">{{ invoice.status }}</span>
+            </div>
+            <div class="invoice-details">
+                <div><strong>Invoice #:</strong> {{ invoice.invoice_id }}</div>
+                <div><strong>Date:</strong> {{ invoice.date }}</div>
+                <div><strong>Due Date:</strong> {{ invoice.due_date }}</div>
+                <div><strong>Terms:</strong> {{ invoice.payment_terms }}</div>
+            </div>
+        </div>
+
+        <div class="parties">
+            <div class="party">
+                <h3>From</h3>
+                <div class="party-content">
+                    <p class="org-name">{{ invoice.sender.organization }}</p>
+                    <p>{{ invoice.sender.name }}</p>
+                    <p>{{ invoice.sender.address.street }}</p>
+                    {% if invoice.sender.address.optional %}
+                    <p>{{ invoice.sender.address.optional }}</p>
+                    {% endif %}
+                    <p>{{ invoice.sender.address.city }}, {{ invoice.sender.address.state }} {{ invoice.sender.address.zip }}</p>
+                    <p>{{ invoice.sender.address.country }}</p>
+                </div>
+            </div>
+
+            <div class="party" style="margin-left: 20px;">
+                <h3>Bill To</h3>
+                <div class="party-content">
+                    <p class="org-name">{{ invoice.bill_to.organization }}</p>
+                    <p>{{ invoice.bill_to.address.street }}</p>
+                    {% if invoice.bill_to.address.optional %}
+                    <p>{{ invoice.bill_to.address.optional }}</p>
+                    {% endif %}
+                    <p>{{ invoice.bill_to.address.city }}, {{ invoice.bill_to.address.state }} {{ invoice.bill_to.address.zip }}</p>
+                    <p>{{ invoice.bill_to.address.country }}</p>
+                </div>
+            </div>
+        </div>
+
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th class="right">Qty</th>
+                    <th class="right">Unit Cost</th>
+                    <th class="right">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in invoice['items'] %}
+                <tr>
+                    <td>
+                        <div>{{ item.description }}</div>
+                        <div class="item-date">
+                            {% if item.date is mapping %}
+                                {{ item.date.start }} to {{ item.date.end }}
+                            {% else %}
+                                {{ item.date }}
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="right">{{ item.quantity }} {{ item.units }}</td>
+                    <td class="right">{{ "%.2f"|format(item.unit_cost) }} {{ invoice.currency }}</td>
+                    <td class="right">{{ "%.2f"|format(item.quantity * item.unit_cost) }} {{ invoice.currency }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="totals">
+            <div class="total-row">
+                <span>Subtotal:</span>
+                <span>{{ "%.2f"|format(subtotal) }} {{ invoice.currency }}</span>
+            </div>
+            <div class="total-row final">
+                <span>Total:</span>
+                <span>{{ "%.2f"|format(total) }} {{ invoice.currency }}</span>
+            </div>
+        </div>
+
+        {% if invoice.notes %}
+        <div class="notes">
+            <h4>Notes</h4>
+            <p>{{ invoice.notes }}</p>
+        </div>
+        {% endif %}
+
+        {# Only show attachments section if there are any attachments #}
+        {% set has_attachments = namespace(value=false) %}
+        {% for item in invoice['items'] %}
+            {% if item.attachments and item.attachments|length > 0 %}
+                {% set has_attachments.value = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% if has_attachments.value %}
+        <div class="page-break"></div>
+
+        <div class="attachments-section">
+            <h2>Attachments</h2>
+            <div class="attachments-grid">
+                {% for item in invoice['items'] %}
+                    {% if item.attachments %}
+                        {% for attachment in item.attachments %}
+                        <div class="attachment-item">
+                            <img src="{{ attachment }}" alt="{{ item.description }}">
+                            <div class="attachment-caption">
+                                {{ item.description }}<br>
+                                {% if item.date is mapping %}
+                                    {{ item.date.start }} to {{ item.date.end }}
+                                {% else %}
+                                    {{ item.date }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+venv/
+data/
+output/
+
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*.pyc
+
+# Ignore generated HTML files, but keep template
+invoice.html
+
+__pycache__/
+.DS_Store
